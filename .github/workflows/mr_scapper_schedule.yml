@@ -1,0 +1,30 @@
+on:
+  schedule:
+    - cron:  '45 3 * * 1-5'  # 10:45 ICT
+    - cron:  '40 7 * * 1-5'  # 14:40 ICT
+    - cron:  '0 10 * * 1-5'  # 17:00 ICT
+    
+    - cron:  '0 11 * * 1-5'
+    - cron:  '0 11 * * *'
+    - cron:  '0 4 * * *'
+  workflow_dispatch:
+
+env:
+  GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+  STACK_USER_OAUTH_TOKEN: ${{ secrets.STACK_USER_OAUTH_TOKEN }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - run: |
+          pip3 install poetry 
+          poetry install
+
+      - run: poetry run python mr_scapper
